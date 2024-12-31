@@ -1,0 +1,7 @@
+{
+  "extends": ["next/core-web-vitals", "eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:react/recommended"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "off", // Disables the unused variable rule
+    "react/no-unescaped-entities": "off"       // Disables the unescaped entities rule
+  }
+}
