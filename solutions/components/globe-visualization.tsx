@@ -8,6 +8,10 @@ export function GlobeVisualization() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const segments = 128 // Declare segments once
+const radius = 100 // Declare radius only once
+const geometry = new THREE.SphereGeometry(radius, segments, segments)
+
     if (!containerRef.current) return
 
     // Scene setup
@@ -25,11 +29,25 @@ export function GlobeVisualization() {
     renderer.setPixelRatio(window.devicePixelRatio)
     containerRef.current.appendChild(renderer.domElement)
 
-    // Globe
-    const radius = 100
-    const segments = 128
-    const geometry = new THREE.SphereGeometry(radius, segments, segments)
+    // Ocean sphere (slightly larger than the globe)
+// Declare radius and segments first
+// const radius = 100
+// const segments = 128
 
+// Ocean sphere (slightly larger than the globe)
+const oceanGeometry = new THREE.SphereGeometry(radius * 0.995, segments, segments)
+    const oceanMaterial = new THREE.MeshPhongMaterial({
+      color: 0x001133,
+      transparent: true,
+      opacity: 0.6,
+      shininess: 100
+    })
+    const ocean = new THREE.Mesh(oceanGeometry, oceanMaterial)
+    scene.add(ocean)
+
+    // Globe
+    // const geometry = new THREE.SphereGeometry(radius, segments, segments)
+// 
     // Load Earth texture with visible countries
     const textureLoader = new THREE.TextureLoader()
     const earthTexture = textureLoader.load('/earth-blue-marble.jpg')
@@ -44,6 +62,17 @@ export function GlobeVisualization() {
 
     const globe = new THREE.Mesh(geometry, globeMaterial)
     scene.add(globe)
+
+    // Add boundary sphere
+    // const boundaryGeometry = new THREE.SphereGeometry(radius * 1.001, segments, segments)
+    // const boundaryMaterial = new THREE.MeshBasicMaterial({
+    //   color: 0xffffff,
+    //   transparent: true,
+    //   opacity: 0.1,
+    //   // wireframe: true
+    // })
+    // const boundary = new THREE.Mesh(boundaryGeometry, boundaryMaterial)
+    // scene.add(boundary)
 
     // Add country borders
     fetch('/countries.geojson')
@@ -94,33 +123,46 @@ export function GlobeVisualization() {
       parent.add(line)
     }
 
-    // Enhanced lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8)
-    scene.add(ambientLight)
+    // Create point light for twinkling effect
+    function createTwinkle(position: THREE.Vector3) {
+      const light = new THREE.PointLight(0x9933ff, 2, 10)
+      light.position.copy(position)
+      scene.add(light)
 
-    const pointLight = new THREE.PointLight(0xffffff, 1)
-    pointLight.position.set(200, 100, 150)
-    scene.add(pointLight)
+      // Animate the light
+      let intensity = 2
+      const animateLight = () => {
+        intensity *= 0.95
+        light.intensity = intensity * (0.5 + 0.5 * Math.sin(Date.now() * 0.01))
 
+        if (intensity > 0.1) {
+          requestAnimationFrame(animateLight)
+        } else {
+          scene.remove(light)
+        }
+      }
+      animateLight()
+    }
+    function latLngToVector3(lat: number, lng: number, sphereRadius: number): THREE.Vector3 {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lng + 180) * (Math.PI / 180);
+    
+      const x = -(sphereRadius * Math.sin(phi) * Math.cos(theta));
+      const y = sphereRadius * Math.cos(phi);
+      const z = sphereRadius * Math.sin(phi) * Math.sin(theta);
+    
+      return new THREE.Vector3(x, y, z);
+    }
+    
 
-    // Connection points
-    const connectionPoints = [
-      { lat: 40.7128, lng: -74.0060 }, // New York
-      { lat: 51.5074, lng: -0.1278 },  // London
-      { lat: 35.6762, lng: 139.6503 }, // Tokyo
-      { lat: 22.3193, lng: 114.1694 }, // Hong Kong
-      { lat: 1.3521, lng: 103.8198 },  // Singapore
-      { lat: -33.8688, lng: 151.2093 }, // Sydney
-      { lat: 19.0760, lng: 72.8777 },  // Mumbai
-      { lat: 55.7558, lng: 37.6173 },  // Moscow
-      { lat: -23.5505, lng: -46.6333 }, // São Paulo
-      { lat: 25.2048, lng: 55.2708 },  // Dubai
-    ]
-
-    // Connection line creation
+    // Connection line creation with enhanced effects
     const createConnection = (start: { lat: number; lng: number }, end: { lat: number; lng: number }) => {
       const startVec = latLngToVector3(start.lat, start.lng, radius)
       const endVec = latLngToVector3(end.lat, end.lng, radius)
+      
+      // Create twinkling effect at start and end points
+      createTwinkle(startVec)
+      createTwinkle(endVec)
       
       const mid = new THREE.Vector3()
       mid.addVectors(startVec, endVec)
@@ -132,7 +174,7 @@ export function GlobeVisualization() {
       const geometry = new THREE.BufferGeometry().setFromPoints(points)
       
       const material = new THREE.LineBasicMaterial({
-        color: new THREE.Color(0.5 + Math.random() * 0.5, 0.2, 1),
+        color: new THREE.Color(0x9933ff),
         opacity: 0,
         transparent: true,
         linewidth: 2
@@ -141,7 +183,7 @@ export function GlobeVisualization() {
       const line = new THREE.Line(geometry, material)
       scene.add(line)
 
-      // Animate line
+      // Animate line with glow
       let progress = 0
       const animate = () => {
         progress += 0.02
@@ -156,6 +198,55 @@ export function GlobeVisualization() {
       animate()
     }
 
+    // Enhanced lighting
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.5)
+    scene.add(ambientLight)
+
+    const pointLight = new THREE.PointLight(0xffffff, 1.5)
+    pointLight.position.set(200, 100, 150)
+    scene.add(pointLight)
+
+    // Controls
+    const controls = new OrbitControls(camera, renderer.domElement)
+    controls.enableDamping = true
+    controls.dampingFactor = 0.05
+    controls.rotateSpeed = 0.5
+    controls.enableZoom = false
+    controls.autoRotate = true
+    controls.autoRotateSpeed = -0.5 // Negative for correct rotation direction
+
+    // Animation
+    const animate = () => {
+      requestAnimationFrame(animate)
+      controls.update()
+      renderer.render(scene, camera)
+    }
+    animate()
+
+    const connectionPoints = [
+      { lat: 40.7128, lng: -74.0060 },  // New York
+      { lat: 51.5074, lng: -0.1278 },   // London
+      { lat: 35.6762, lng: 139.6503 },  // Tokyo
+      { lat: 22.3193, lng: 114.1694 },  // Hong Kong
+      { lat: 1.3521, lng: 103.8198 },   // Singapore
+      { lat: -33.8688, lng: 151.2093 }, // Sydney
+      { lat: 19.0760, lng: 72.8777 },   // Mumbai
+      { lat: 55.7558, lng: 37.6173 },   // Moscow
+      { lat: -23.5505, lng: -46.6333 }, // São Paulo
+      { lat: 25.2048, lng: 55.2708 },   // Dubai
+      { lat: 48.8566, lng: 2.3522 },    // Paris
+      { lat: 52.5200, lng: 13.4050 },   // Berlin
+      { lat: -34.6037, lng: -58.3816 }, // Buenos Aires
+      { lat: 37.7749, lng: -122.4194 }, // San Francisco
+      { lat: 31.2304, lng: 121.4737 },  // Shanghai
+      { lat: -26.2041, lng: 28.0473 },  // Johannesburg
+      { lat: 41.0082, lng: 28.9784 },   // Istanbul
+      { lat: 13.7563, lng: 100.5018 },  // Bangkok
+      { lat: -37.8136, lng: 144.9631 }, // Melbourne
+      { lat: 43.6532, lng: -79.3832 },  // Toronto
+    ]
+    
+
     // Create connections periodically
     const createRandomConnection = () => {
       const start = connectionPoints[Math.floor(Math.random() * connectionPoints.length)]
@@ -166,23 +257,6 @@ export function GlobeVisualization() {
     }
 
     setInterval(createRandomConnection, 450)
-
-    // Controls
-    const controls = new OrbitControls(camera, renderer.domElement)
-    controls.enableDamping = true
-    controls.dampingFactor = 0.05
-    controls.rotateSpeed = 0.5
-    controls.enableZoom = false
-    controls.autoRotate = true
-    controls.autoRotateSpeed = 0.5
-
-    // Animation
-    const animate = () => {
-      requestAnimationFrame(animate)
-      controls.update()
-      renderer.render(scene, camera)
-    }
-    animate()
 
     // Handle resize
     const handleResize = () => {
@@ -201,18 +275,11 @@ export function GlobeVisualization() {
     }
   }, [])
 
-  return <div ref={containerRef} className="w-full h-[600px]" />
-}
-
-// Helper function to convert latitude/longitude to 3D coordinates
-function latLngToVector3(lat: number, lng: number, radius: number) {
-  const phi = (90 - lat) * (Math.PI / 180)
-  const theta = (lng + 180) * (Math.PI / 180)
-
-  return new THREE.Vector3(
-    -radius * Math.sin(phi) * Math.cos(theta),
-    radius * Math.cos(phi),
-    radius * Math.sin(phi) * Math.sin(theta)
+  return (
+    <div className="relative">
+      <div className="absolute inset-0 bg-gradient-to-b from-yellow-400/5 to-transparent pointer-events-none" />
+      <div ref={containerRef} className="w-full h-[600px] border border-white/10 rounded-lg backdrop-blur-sm" />
+    </div>
   )
 }
 

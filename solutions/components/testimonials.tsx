@@ -45,42 +45,34 @@ export function Testimonials() {
           transition={{ delay: index * 0.2 }}
           className="relative group"
         >
-          {/* Computer screen frame */}
-          <div className="relative bg-gray-900 rounded-lg p-1">
-            <div className="bg-gray-800 rounded-t-lg p-2 flex items-center space-x-2">
-              <div className="flex space-x-1">
-                <div className="w-3 h-3 rounded-full bg-red-500" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                <div className="w-3 h-3 rounded-full bg-green-500" />
-              </div>
-            </div>
-            <div className="relative aspect-video bg-gray-950 p-4">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10" />
-              <div className="relative z-10 h-full flex items-center">
-                <div className="space-y-4">
-                  {/* Profile section */}
-                  <div className="flex items-center space-x-4">
-                    <div className="relative w-16 h-16">
-                      <Image
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        fill
-                        className="rounded-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white">{testimonial.name}</h3>
-                      <p className="text-sm text-gray-400">{testimonial.role}</p>
-                      <p className="text-sm text-gray-500">{testimonial.company}</p>
-                    </div>
-                  </div>
-                  
-                  {/* Quote section styled as terminal */}
-                  <div className="bg-black/50 rounded-lg p-4 font-mono text-sm">
-                    <p className="text-green-400">$ echo "{testimonial.quote}"</p>
-                  </div>
+          <div className="relative overflow-hidden rounded-lg border border-yellow-400/20 bg-black/40 backdrop-blur-sm p-6">
+            {/* Glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 via-transparent to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            <div className="relative z-10">
+              {/* Profile section */}
+              <div className="flex items-center space-x-4 mb-4">
+                <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-yellow-400/20">
+                  <Image
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white">{testimonial.name}</h3>
+                  <p className="text-sm text-yellow-400">{testimonial.role}</p>
+                  <p className="text-sm text-gray-400">{testimonial.company}</p>
                 </div>
               </div>
+              
+              {/* Quote */}
+              <blockquote className="relative">
+                <div className="relative z-10 text-gray-300">
+                  "{testimonial.quote}"
+                </div>
+              </blockquote>
             </div>
           </div>
         </motion.div>

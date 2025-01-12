@@ -28,7 +28,7 @@ export default function Home() {
               height={40}
               className="rounded-lg"
             />
-            <div className="text-2xl font-bold">AI BPO Solutions</div>
+            <div className="text-2xl font-bold">SyncronDesk</div>
           </div>
           <NavMenu />
         </div>
@@ -37,7 +37,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="min-h-[80vh] flex items-center justify-center px-4 relative">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+          <h1 className="text-8xl md:text-7xl font-bold mb-6 leading-tight">
             Transform Your Workflow with AI-Powered Automation
           </h1>
           <p className="text-xl text-gray-400 mb-8">
@@ -62,10 +62,10 @@ export default function Home() {
       </section>
 
       {/* Sentiment Analysis */}
-      <section id="sentiment" className="max-w-7xl mx-auto px-4 py-20">
+      {/* <section id="sentiment" className="max-w-7xl mx-auto px-4 py-20">
         <SectionHeading>Sentiment Analysis</SectionHeading>
         <SentimentAnalysis />
-      </section>
+      </section> */}
 
       {/* Testimonials */}
       <section id="testimonials" className="max-w-7xl mx-auto px-4 py-20">

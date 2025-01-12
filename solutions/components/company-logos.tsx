@@ -25,7 +25,6 @@ const companies = [
   { name: 'VISA', logo: '/visa.svg' },
 
   { name: 'TradeDesk', logo: '/buxx.svg' },
-
 ]
 
 export function CompanyLogos() {
@@ -48,7 +47,7 @@ export function CompanyLogos() {
   }, [])
 
   return (
-    <div className="w-full overflow-hidden bg-black/50 backdrop-blur-sm py-12">
+    <div className="w-full overflow-hidden py-12">
       <div
         ref={containerRef}
         className="flex space-x-12 overflow-x-hidden whitespace-nowrap"
@@ -59,14 +58,14 @@ export function CompanyLogos() {
             key={`${company.name}-${index}`}
             className="flex-none"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.6 }}
-            whileHover={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.3 }}
           >
             <img
               src={company.logo}
               alt={company.name}
-              className="h-12 w-auto object-contain filter grayscale hover:grayscale-0 transition-all"
+              className="h-12 w-auto object-contain"
             />
           </motion.div>
         ))}
