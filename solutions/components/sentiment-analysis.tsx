@@ -27,7 +27,7 @@ export function SentimentAnalysis() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
     >
-      <Card className="bg-black/40 backdrop-blur-sm border-yellow-400/20">
+      <Card className="bg-black/40 backdrop-blur-sm border-yellow-400/20 text-white">
         <CardHeader>
           <CardTitle>Sentiment Analysis</CardTitle>
         </CardHeader>

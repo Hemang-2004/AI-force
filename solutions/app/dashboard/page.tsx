@@ -1,4 +1,4 @@
-import { CallbackCalendar } from "@/components/calendar"
+import { CallbackCalendar } from "@/components/ui/callback-calendar"
 import { KnowledgeBase } from "@/components/knowledge-base"
 import { NewClaimDialog } from "@/components/new-claim-dialog"
 import { TaskList } from "@/components/task-list"

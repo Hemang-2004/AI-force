@@ -17,6 +17,11 @@ function Calendar({
 }: CalendarProps) {
   return (
     <DayPicker
+    formatters={{
+      formatWeekdayName: (weekday) => {
+        return weekday.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 2)
+      }
+    }}
       showOutsideDays={showOutsideDays}
       className={cn("p-3", className)}
       classNames={{
