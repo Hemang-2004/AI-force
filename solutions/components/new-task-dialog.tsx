@@ -29,14 +29,15 @@ interface NewTaskDialogProps {
 
 export function NewTaskDialog({ onAddTask }: NewTaskDialogProps) {
   const [open, setOpen] = React.useState(false)
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<Omit<Task, "id">>({
     clientName: "",
     type: "callback",
-    priority: "medium",
+    priority: "medium", // Must be one of "high" | "medium" | "low"
     dueTime: "",
     description: "",
     status: "pending"
   })
+  
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

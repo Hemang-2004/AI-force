@@ -190,33 +190,34 @@ export default function SchedulerPage() {
     <CardTitle className="text-yellow-400">Calendar</CardTitle>
   </CardHeader>
   <CardContent>
-    <Calendar
-      mode="single"
-      selected={selectedDate}
-      onSelect={setSelectedDate}
-      className="rounded-md border border-yellow-400/20 bg-white text-black p-3"
-      modifiers={{
-        hasTasks: (date) => getTasksForDate(date) > 0
-      }}
-      modifiersStyles={{
-        hasTasks: {
-          backgroundColor: "rgba(250, 204, 21, 0.2)",
-          fontWeight: "bold",
-          color: "black"
-        }
-      }}
-      styles={{
-        nav_button: "bg-yellow-400 text-black hover:bg-yellow-500",
-        nav_button_previous: "absolute left-1",
-        nav_button_next: "absolute right-1",
-        caption: "relative items-center justify-center flex py-2",
-        head_cell: "text-black font-medium",
-        cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-yellow-400",
-        day: "h-9 w-9 p-0 font-normal text-black hover:bg-yellow-100",
-        day_selected: "bg-yellow-400 text-black hover:bg-yellow-400",
-        day_today: "bg-yellow-100 text-black",
-      }}
-    />
+  <Calendar
+  mode="single"
+  selected={selectedDate}
+  onSelect={setSelectedDate}
+  className="rounded-md border border-yellow-400/20 bg-white text-black p-3"
+  modifiers={{
+    hasTasks: (date) => getTasksForDate(date) > 0
+  }}
+  modifiersStyles={{
+    hasTasks: {
+      backgroundColor: "rgba(250, 204, 21, 0.2)",
+      fontWeight: "bold",
+      color: "black"
+    }
+  }}
+  classNames={{
+    nav_button: "bg-yellow-400 text-black hover:bg-yellow-500",
+    nav_button_previous: "absolute left-1",
+    nav_button_next: "absolute right-1",
+    caption: "relative items-center justify-center flex py-2",
+    head_cell: "text-black font-medium",
+    cell: "text-center text-sm p-0 relative [&:has([aria-selected])]:bg-yellow-400",
+    day: "h-9 w-9 p-0 font-normal text-black hover:bg-yellow-100",
+    day_selected: "bg-yellow-400 text-black hover:bg-yellow-400",
+    day_today: "bg-yellow-100 text-black",
+  }}
+/>
+
   </CardContent>
 </Card>
 
