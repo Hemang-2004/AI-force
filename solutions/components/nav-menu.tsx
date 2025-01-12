@@ -5,6 +5,9 @@ import { usePathname } from 'next/navigation'
 import { cn } from "@/lib/utils"
 import { Home, LayoutDashboard, Calendar, Book, BarChart, Users, Settings } from 'lucide-react'
 
+// Replace this with the path to your logo image
+const logoSrc = "/mainlogo.png"
+
 const links = [
   { name: 'Home', href: '/', icon: Home },
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -22,17 +25,19 @@ export function NavMenu() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex h-20 items-center justify-between">
-          <div className="flex items-center">
+          <div className="flex items-center space-x-3">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg bg-yellow-400 flex items-center justify-center">
-                <span className="text-black text-xl font-bold">AI</span>
-              </div>
+              <img 
+                src={logoSrc} 
+                alt="Logo" 
+                className="h-10 w-10 rounded-full object-cover hidden md:block" 
+              />
               <span className="text-xl font-bold text-white hidden md:inline">
-                AI Workforce
+                Syncron-Desk
               </span>
             </Link>
           </div>
-          
+
           <div className="flex items-center space-x-6">
             {links.map((item) => (
               <Link
@@ -55,4 +60,3 @@ export function NavMenu() {
     </nav>
   )
 }
-
